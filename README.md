@@ -59,6 +59,16 @@
 - **详细影视信息**：自动获取豆瓣评分、演员阵容、剧情简介等详细信息
 - **推荐系统**：基于豆瓣数据的相关推荐
 - **自定义标签管理**：支持拖拽排序的标签管理器，自定义首页推荐分类
+- **可点击演员/导演**：播放页面的演员、导演名字可直接点击搜索其他作品
+
+### 个性化推荐
+
+- **基于观看历史**：根据观看历史自动分析偏好，推荐相关影视内容
+- **智能分析**：分析最常观看的类型、演员和地区，生成精准推荐
+- **标签集成**：推荐作为首个标签「为你推荐」出现在标签栏中（需观看 2 部以上作品）
+- **自动加载**：无限滚动自动加载更多推荐内容
+- **独立模式**：普通模式和高级模式的推荐互相独立
+- **缓存优化**：推荐结果缓存 30 分钟，避免重复请求
 
 ### 收藏管理
 
@@ -76,9 +86,10 @@
 
 ### 响应式设计
 
-- **全端适配**：完美支持桌面、平板和移动设备
+- **全端适配**：完美支持桌面、平板、移动设备和 TV/机顶盒
 - **移动优先**：专门的移动端组件和交互设计
 - **触摸优化**：针对触摸屏优化的手势和交互
+- **TV 适配**：遥控器方向键导航和大屏 UI 优化
 
 ### 主题系统
 
@@ -102,7 +113,31 @@
 
 - **独立入口**：在浏览器地址栏直接输入 `/premium` 即可进入独立的高级视频专区
 - **内容隔离**：高级内容与普通内容完全物理隔离，互不干扰
-- **专属设置**：拥有独立的内容源管理和功能设置
+- **专属设置**：拥有独立的内容源管理和功能设置（播放器、显示、弹幕等设置完全独立）
+- **独立推荐**：基于高级模式观看历史的个性化推荐，与普通模式互不影响
+
+### TV/大屏适配
+
+- **自动检测**：自动检测 TV 浏览器（Smart TV、Tizen、WebOS、Fire TV 等）
+- **空间导航**：支持遥控器/方向键在页面元素间导航
+- **10 英尺 UI**：TV 模式下自动放大字体、交互元素和间距
+- **焦点高亮**：TV 模式下聚焦元素显示醒目的高亮边框和缩放效果
+- **播放器兼容**：播放器区域不受空间导航干扰，方向键正常控制播放
+
+### Android TV 应用
+
+- **WebView 封装**：基于 Android WebView 的轻量 APK，直接加载 KVideo 网页
+- **遥控器支持**：D-pad 中心键映射为 Enter，Back 键映射为网页后退
+- **全屏沉浸**：自动横屏、全屏、硬件加速
+- **Leanback 启动器**：支持从 Android TV 主屏直接启动
+- **可配置 URL**：在 `MainActivity.kt` 中修改 `KVIDEO_URL` 常量指向你的部署实例
+
+### Apple TV 应用
+
+- **WKWebView 封装**：基于 tvOS WKWebView 的轻量 SwiftUI 应用，直接加载 KVideo 网页
+- **遥控器支持**：滑动手势映射为滚动，点击映射为聚焦/选择，Menu 按钮支持网页后退
+- **TV 模式注入**：页面加载后自动注入 `tv-mode` CSS 类，激活大屏优化样式
+- **可配置 URL**：在 `ContentView.swift` 中修改 `kvideoURL` 常量指向你的部署实例
 
 ### 广告过滤
 
@@ -501,6 +536,75 @@ npm start
 ```
 
 应用将在 `http://localhost:3000` 启动。
+
+#### 选项 5：Android TV APK 构建
+
+项目内置了一个轻量的 Android TV WebView 壳应用，可以将 KVideo 打包成 APK 安装到 Android TV 或机顶盒上。
+
+**前置要求：**
+
+- [Android Studio](https://developer.android.com/studio)（推荐）或 Android SDK Command-line Tools
+- JDK 17+
+
+**步骤：**
+
+1. **修改目标 URL**：编辑 `android-tv/app/src/main/java/com/kvideo/tv/MainActivity.kt`，将 `KVIDEO_URL` 改为你的部署地址：
+   ```kotlin
+   private const val KVIDEO_URL = "https://your-kvideo-instance.com"
+   ```
+
+2. **使用 Android Studio 构建（推荐）**：
+   - 用 Android Studio 打开 `android-tv/` 目录
+   - 等待 Gradle 同步完成
+   - 点击 **Build → Build Bundle(s) / APK(s) → Build APK(s)**
+   - APK 输出在 `android-tv/app/build/outputs/apk/debug/app-debug.apk`
+
+3. **使用命令行构建**：
+   ```bash
+   cd android-tv
+   ./gradlew assembleDebug
+   ```
+   APK 输出在 `app/build/outputs/apk/debug/app-debug.apk`
+
+4. **安装到 Android TV**：
+   ```bash
+   adb install app/build/outputs/apk/debug/app-debug.apk
+   ```
+   或通过 U 盘、文件管理器等方式侧载安装。
+
+> **注意**：此 APK 是一个 WebView 壳应用，需要你的 KVideo 实例已经部署并可访问。APK 本身不包含 KVideo 代码，仅作为 TV 端的浏览器入口。
+
+#### 选项 6：Apple TV 应用构建
+
+项目内置了一个轻量的 tvOS WKWebView 壳应用，可以将 KVideo 安装到 Apple TV 上。
+
+**前置要求：**
+
+- macOS + Xcode 15+
+- Apple Developer 账号（免费账号即可侧载到个人设备）
+
+**步骤：**
+
+1. **创建 Xcode 项目**：打开 Xcode → **File → New → Project** → 选择 **tvOS → App** → 设置 Product Name 为 `KVideoTV`，Interface 选 **SwiftUI**，Language 选 **Swift**
+
+2. **替换源文件**：将项目中 `apple-tv/KVideoTV/KVideoTV/` 目录下的 `KVideoTVApp.swift` 和 `ContentView.swift` 复制替换 Xcode 生成的同名文件
+
+3. **修改目标 URL**：编辑 `ContentView.swift`，将 `kvideoURL` 改为你的部署地址：
+   ```swift
+   let kvideoURL = "https://your-kvideo-instance.com"
+   ```
+
+4. **设置部署目标**：将 Deployment Target 设置为 **tvOS 16.0** 或更高
+
+5. **构建运行**：连接 Apple TV（或使用 tvOS 模拟器），按 **Cmd+R** 构建运行
+
+**工作原理：**
+- 全屏 `WKWebView` 加载 KVideo URL
+- 页面加载后自动注入 `tv-mode` CSS 类，激活 TV 优化样式
+- Apple TV 遥控器滑动手势映射为滚动，点击映射为聚焦/选择
+- Menu 按钮支持网页后退导航
+
+> **注意**：Apple TV 应用如果仅是 Web 壳应用，不可上架 App Store。此功能仅供个人侧载使用。也可以直接从 iPhone/iPad/Mac 使用 AirPlay 投屏，无需此应用。
 
 ## 如何更新
 

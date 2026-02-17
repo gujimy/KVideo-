@@ -36,6 +36,7 @@ export const MovieCard = memo(function MovieCard({ movie, onMovieClick }: MovieC
         e.preventDefault();
         onMovieClick(movie);
       }}
+      data-focusable
       className="group cursor-pointer hover:translate-y-[-2px] transition-transform duration-200 ease-out"
       style={{
         position: 'relative',

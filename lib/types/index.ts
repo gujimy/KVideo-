@@ -101,6 +101,9 @@ export interface VideoHistoryItem {
   poster?: string;
   episodes: Episode[];
   showIdentifier: string; // Unique identifier for deduplication
+  vod_actor?: string;
+  type_name?: string;
+  vod_area?: string;
 }
 
 // Favorite Entry

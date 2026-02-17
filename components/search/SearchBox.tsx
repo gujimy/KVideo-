@@ -82,6 +82,7 @@ export function SearchBox({ onSearch, onClear, initialQuery = '', placeholder = 
                 aria-expanded={isDropdownOpen}
                 aria-controls="search-history-dropdown"
                 aria-autocomplete="list"
+                data-focusable
             />
 
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">

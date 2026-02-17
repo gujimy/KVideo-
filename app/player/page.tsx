@@ -14,6 +14,7 @@ import { FavoritesSidebar } from '@/components/favorites/FavoritesSidebar';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { PlayerNavbar } from '@/components/player/PlayerNavbar';
 import { settingsStore } from '@/lib/store/settings-store';
+import { premiumModeSettingsStore } from '@/lib/store/premium-mode-settings';
 import { SegmentedControl } from '@/components/ui/SegmentedControl';
 import Image from 'next/image';
 
@@ -29,9 +30,10 @@ function PlayerContent() {
   const episodeParam = searchParams.get('episode');
   const groupedSourcesParam = searchParams.get('groupedSources');
 
-  // Track settings
+  // Track settings - use mode-specific store
+  const modeStore = isPremium ? premiumModeSettingsStore : settingsStore;
   const [isReversed, setIsReversed] = useState(() =>
-    typeof window !== 'undefined' ? settingsStore.getSettings().episodeReverseOrder : false
+    typeof window !== 'undefined' ? modeStore.getSettings().episodeReverseOrder : false
   );
 
   // Mobile tab state
@@ -39,7 +41,7 @@ function PlayerContent() {
 
   // Sync with store changes if any (though usually it's one-way from UI to store)
   useEffect(() => {
-    setIsReversed(settingsStore.getSettings().episodeReverseOrder);
+    setIsReversed(modeStore.getSettings().episodeReverseOrder);
   }, []);
 
   // Redirect if no video ID or source
@@ -105,7 +107,8 @@ function PlayerContent() {
         0, // Initial playback position
         0, // Will be updated by VideoPlayer
         videoData.vod_pic,
-        mappedEpisodes
+        mappedEpisodes,
+        { vod_actor: videoData.vod_actor, type_name: videoData.type_name, vod_area: videoData.vod_area }
       );
     }
   }, [videoData, playUrl, videoId, currentEpisode, source, title, addToHistory]);
@@ -123,8 +126,8 @@ function PlayerContent() {
 
   const handleToggleReverse = (reversed: boolean) => {
     setIsReversed(reversed);
-    const settings = settingsStore.getSettings();
-    settingsStore.saveSettings({
+    const settings = modeStore.getSettings();
+    modeStore.saveSettings({
       ...settings,
       episodeReverseOrder: reversed
     });

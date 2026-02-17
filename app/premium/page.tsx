@@ -64,7 +64,9 @@ function PremiumHomePage() {
 
                 {/* Premium Content - Trending and Latest */}
                 {!loading && !hasSearched && (
-                    <PremiumContent onSearch={handleSearch} />
+                    <>
+                        <PremiumContent onSearch={handleSearch} />
+                    </>
                 )}
             </main>
 

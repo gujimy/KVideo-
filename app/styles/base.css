@@ -153,3 +153,33 @@ nav {
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
 }
+
+/* TV Mode Styles */
+body.tv-mode [data-focusable]:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 6px rgba(0, 122, 255, 0.2);
+    transform: scale(1.03);
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+body.tv-mode {
+    font-size: 18px;
+}
+
+body.tv-mode [data-focusable] {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+body.tv-mode [class*="grid"] {
+    gap: 1.25rem;
+}
+
+body.tv-mode [class*="gap-3"] {
+    gap: 1.25rem;
+}
+
+body.tv-mode [class*="gap-4"] {
+    gap: 1.5rem;
+}

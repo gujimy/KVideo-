@@ -69,7 +69,11 @@ function HomePage() {
         )}
 
         {/* Popular Features - Homepage */}
-        {!loading && !hasSearched && <PopularFeatures onSearch={handleSearch} />}
+        {!loading && !hasSearched && (
+          <>
+            <PopularFeatures onSearch={handleSearch} />
+          </>
+        )}
 
         {/* No Results */}
         {!loading && hasSearched && results.length === 0 && (

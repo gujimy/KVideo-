@@ -3,7 +3,8 @@
 import { AddSourceModal } from '@/components/settings/AddSourceModal';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { PremiumSourceSettings } from '@/components/settings/PremiumSourceSettings';
-import { SettingsHeader } from '@/components/settings/SettingsHeader';
+import { DisplaySettings } from '@/components/settings/DisplaySettings';
+import { PlayerSettings } from '@/components/settings/PlayerSettings';
 import { AdminGate } from '@/components/AdminGate';
 import { usePremiumSettingsPage } from './hooks/usePremiumSettingsPage';
 import Link from 'next/link';
@@ -21,13 +22,31 @@ export default function PremiumSettingsPage() {
         editingSource,
         handleEditSource,
         setEditingSource,
+        // Display settings
+        realtimeLatency,
+        searchDisplayMode,
+        fullscreenType,
+        proxyMode,
+        rememberScrollPosition,
+        handleRealtimeLatencyChange,
+        handleSearchDisplayModeChange,
+        handleFullscreenTypeChange,
+        handleProxyModeChange,
+        handleRememberScrollPositionChange,
+        // Danmaku settings
+        danmakuApiUrl,
+        handleDanmakuApiUrlChange,
+        danmakuOpacity,
+        handleDanmakuOpacityChange,
+        danmakuFontSize,
+        handleDanmakuFontSizeChange,
     } = usePremiumSettingsPage();
 
     return (
         <AdminGate>
         <div className="min-h-screen bg-black">
             <div className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
-                {/* Custom Header for Secret Settings */}
+                {/* Custom Header for Premium Settings */}
                 <div className="bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-[var(--radius-2xl)] shadow-[var(--shadow-sm)] p-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -41,12 +60,36 @@ export default function PremiumSettingsPage() {
                                 </svg>
                             </Link>
                             <div>
-                                <h1 className="text-2xl font-bold text-[var(--text-color)]">高级源设置</h1>
-                                <p className="text-sm text-[var(--text-color-secondary)]">管理高级内容来源</p>
+                                <h1 className="text-2xl font-bold text-[var(--text-color)]">高级模式设置</h1>
+                                <p className="text-sm text-[var(--text-color-secondary)]">管理高级模式的内容源和偏好设置</p>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Player Settings */}
+                <PlayerSettings
+                    fullscreenType={fullscreenType}
+                    onFullscreenTypeChange={handleFullscreenTypeChange}
+                    proxyMode={proxyMode}
+                    onProxyModeChange={handleProxyModeChange}
+                    danmakuApiUrl={danmakuApiUrl}
+                    onDanmakuApiUrlChange={handleDanmakuApiUrlChange}
+                    danmakuOpacity={danmakuOpacity}
+                    onDanmakuOpacityChange={handleDanmakuOpacityChange}
+                    danmakuFontSize={danmakuFontSize}
+                    onDanmakuFontSizeChange={handleDanmakuFontSizeChange}
+                />
+
+                {/* Display Settings */}
+                <DisplaySettings
+                    realtimeLatency={realtimeLatency}
+                    searchDisplayMode={searchDisplayMode}
+                    rememberScrollPosition={rememberScrollPosition}
+                    onRealtimeLatencyChange={handleRealtimeLatencyChange}
+                    onSearchDisplayModeChange={handleSearchDisplayModeChange}
+                    onRememberScrollPositionChange={handleRememberScrollPositionChange}
+                />
 
                 {/* Premium Source Management */}
                 <PremiumSourceSettings
